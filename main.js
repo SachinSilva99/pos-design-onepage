@@ -6,6 +6,17 @@ $('.navbar-nav .nav-link').click(function () {
     $(targetId).show();
     return false;
 });
-function hideAll(){
+
+function hideAll() {
     $('#home, #customers, #orders,#placeOrder, #items').hide();
 }
+
+
+
+
+
+
+
+
+
+

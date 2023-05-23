@@ -47,7 +47,7 @@
 </nav>
 <main>
     <div id="home">
-        <h1 class="pos">ABC POS System</h1>
+        <h1 id="abc" class="pos">ABC POS System</h1>
         <h4 class="content">Orders : <span class="orders">20</span></h4>
         <h4 class="content">Customers : <span class="customers">10</span></h4>
     </div>
@@ -68,12 +68,12 @@
             </div>
 
             <div class="col-12 button-section">
-                <button type="submit" class="btn btn-success">Add</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button id="add_customer" type="submit" class="btn btn-success">Add</button>
+                <button id="update_customer" type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-md-6 col-sm-12 col-lg-4">
                 <label for="search" class="form-label">Search</label>
-                <input type="text" class="form-control"  placeholder="search id or name...">
+                <input type="text" class="form-control" placeholder="search id or name...">
             </div>
         </form>
         <table class="table table-hover">
@@ -85,7 +85,7 @@
                 <th scope="col">Option</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="customerTbl">
             <tr>
                 <th scope="row">1</th>
                 <td>Nimal</td>
@@ -115,27 +115,27 @@
     </div>
     <div id="items">
         <form class="row g-3 items-form">
-            <h1>Items</h1>
+            <h1 class="m-3">Items</h1>
             <div class="col-lg-3 col-12 col-md-6 col-sm-12">
                 <label for="item_code" class="form-label">Item code</label>
                 <input type="text" class="form-control" id="item_code" placeholder="P001">
             </div>
             <div class=" col-lg-3 col-12 col-md-6 col-sm-12">
-                <label for="description" class="form-label">description</label>
-                <input type="text" class="form-control" id="description" placeholder="White Rice">
+                <label for="item_description" class="form-label">description</label>
+                <input type="text" class="form-control" id="item_description" placeholder="White Rice">
             </div>
             <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                <label for="price" class="form-label">Price</label>
-                <input type="text" class="form-control" id="price" placeholder="200.00">
+                <label for="item_price" class="form-label">Price</label>
+                <input type="text" class="form-control" id="item_price" placeholder="200.00">
             </div>
             <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                <label for="qty" class="form-label">Quantity</label>
-                <input type="text" class="form-control" id="qty" placeholder="20">
+                <label for="item_qty" class="form-label">Quantity</label>
+                <input type="text" class="form-control" id="item_qty" placeholder="20">
             </div>
 
             <div class="col-12 button-section">
-                <button type="submit" class="btn btn-success">Add</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button id="addItem" type="submit" class="btn btn-success">Add</button>
+                <button id="itemUpdate" type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-md-6 col-sm-12 col-lg-4">
                 <label for="search" class="form-label">Search</label>
@@ -152,7 +152,7 @@
                 <th scope="col">Option</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="itemTbl">
             <tr>
                 <th scope="row">P001</th>
                 <td>White Rice</td>
@@ -190,55 +190,49 @@
             <h4 class="date">2023/07/01</h4>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="customerId">Customer Id</label>
+                    <label class="input-group-text" for="customerIds">Customer Id</label>
                 </div>
-                <select class="custom-select" id="customerId">
+                <select class="custom-select" id="customerIds">
                     <option selected>Select Customer Id</option>
-                    <option value="1">C001</option>
-                    <option value="2">C002</option>
-                    <option value="3">C003</option>
                 </select>
             </div>
             <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                <label for="customer_id" class="form-label">Customer Id</label>
-                <input type="text" class="form-control" placeholder="C001">
+                <label for="customer_id_p" class="form-label">Customer Id</label>
+                <input id="customer_id_p" type="text" class="form-control">
             </div>
             <div class=" col-lg-3 col-12 col-md-6 col-sm-12">
-                <label for="customer_name" class="form-label">Name</label>
-                <input type="text" class="form-control"  placeholder="Sachin">
+                <label for="customer_name_p" class="form-label">Name</label>
+                <input id="customer_name_p" type="text" class="form-control">
             </div>
             <div class="col-md-12 col-lg-6 col-sm-12">
-                <label for="customer_address" class="form-label">Address</label>
-                <input type="text" class="form-control"  placeholder="1234 Main St">
+                <label for="customer_address_p" class="form-label">Address</label>
+                <input id="customer_address_p" type="text" class="form-control">
             </div>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="itemCode">Item Code</label>
+                    <label class="input-group-text" for="itemCodes">Item Code</label>
                 </div>
-                <select class="custom-select" id="itemCode">
+                <select class="custom-select" id="itemCodes">
                     <option selected>Select Item Code</option>
-                    <option value="1">P001</option>
-                    <option value="2">P002</option>
-                    <option value="3">P003</option>
                 </select>
             </div>
             <form class="row g-3 items-form">
                 <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                    <label for="item_code" class="form-label">Item code</label>
-                    <input type="text" class="form-control"  placeholder="P001" value="P001" readonly>
+                    <label for="item_code_p" class="form-label">Item code</label>
+                    <input id="item_code_p" type="text" class="form-control" readonly>
                 </div>
                 <div class=" col-lg-3 col-12 col-md-6 col-sm-12">
-                    <label for="description" class="form-label">description</label>
-                    <input type="text" class="form-control" placeholder="White Rice" value="White Rice"
+                    <label for="item_description" class="form-label">description</label>
+                    <input id="item_description_p" type="text" class="form-control"
                            readonly>
                 </div>
                 <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="text" class="form-control" placeholder="200.00" value="200.0" readonly>
+                    <label for="item_price_p" class="form-label">Price</label>
+                    <input id="item_price_p" type="text" class="form-control" readonly>
                 </div>
                 <div class="col-lg-3 col-12 col-md-6 col-sm-12">
-                    <label for="qty" class="form-label">Quantity</label>
-                    <input type="text" class="form-control" placeholder="20" value="20" readonly>
+                    <label for="item_qty_p" class="form-label">Quantity</label>
+                    <input id="item_qty_p" type="text" class="form-control" readonly>
                 </div>
             </form>
         </form>
@@ -289,7 +283,7 @@
 
                 <div class="row d-flex justify-content-end billing">
                     <h3>Total Rs : <span class="total">6000.00</span></h3>
-                    <h4 >Order Id : <span class="order-id">D001</span> </h4>
+                    <h4>Order Id : <span class="order-id">D001</span></h4>
                     <div class="col-12">
                         <label for="cash" class="form-label">Cash</label>
                         <input type="text" class="form-control" id="cash" placeholder="10000">
@@ -361,7 +355,10 @@
 </main>
 <script src="lib/jquery-3.6.4.min.js"></script>
 <script src="lib/bootstrap-5.3.0-alpha3-dist/js/bootstrap.min.js"></script>
-
-<script src="main.js"></script>
+<script type="module" src="controller/CustomerController.js"></script>
+<script type="module" src="controller/ItemController.js"></script>
+<script type="module" src="controller/OrderController.js"></script>
+<script type="module" src="controller/OrderDetailController.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
