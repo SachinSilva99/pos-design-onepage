@@ -1,7 +1,9 @@
-import {Customer} from "../model/Customer.js";
 
 //customers page start---------------------------------------------------------------
-let customers = [];
+import {Customer} from "../model/Customer.js";
+import {customers, setCustomers} from "../db/DB.js";
+
+
 $(document).ready(function () {
 
     //loading customers if available
@@ -9,7 +11,7 @@ $(document).ready(function () {
     console.log(tempCustomers);
     if (tempCustomers !== null) {
         console.log(tempCustomers);
-        customers = tempCustomers.map(c => new Customer(c._customerId, c._name, c._address));
+        setCustomers(tempCustomers.map(c => new Customer(c._customerId, c._name, c._address)));
         loadCustomersTbl();
     }
 
@@ -72,10 +74,8 @@ $('#customerTbl').on('click', 'tr', (e) => {
 
 function loadCustomersTbl() {
     let tempCustomers = JSON.parse(localStorage.getItem('customers'));
-    console.log(tempCustomers);
     if (tempCustomers !== null) {
-        console.log(tempCustomers);
-        customers = tempCustomers.map(c => new Customer(c._customerId, c._name, c._address));
+        setCustomers(tempCustomers.map(c => new Customer(c._customerId, c._name, c._address)));
     }
     let tr = ``;
     customers.map(customer => {
@@ -98,7 +98,7 @@ $("#customerTbl").on("click", ".customer_delete", (e) => {
     deleteCustomer(customerId);
 });
 function deleteCustomer(customerId) {
-    customers = customers.filter((customer) => customer.customerId !== customerId);
+    setCustomers( customers.filter((customer) => customer.customerId !== customerId));
     localStorage.setItem("customers", JSON.stringify(customers));
     loadCustomersTbl();
 }

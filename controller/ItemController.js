@@ -1,12 +1,12 @@
+import {items,  setItems} from "../db/DB.js";
 import {Item} from "../model/Item.js";
 
-let items = [];
 $(document).ready(function () {
 
     //loading items if available
     let tempItems = JSON.parse(localStorage.getItem('items'));
     if (tempItems !== null) {
-        items = tempItems.map(i => new Item(i._code, i._des, i._price, i._qty));
+        setItems(tempItems.map(i => new Item(i._code, i._des, i._price, i._qty)));
         loadItemsTbl();
     }
     //load item codes in place order options
@@ -61,6 +61,10 @@ $('#itemUpdate').click((e) => {
 });
 
 function loadItemsTbl() {
+    let tempItems = JSON.parse(localStorage.getItem('items'));
+    if (tempItems !== null) {
+        setItems(tempItems.map(i => new Item(i._code, i._des, i._price,i._qty)));
+    }
     let tr = ``;
     items.map(item => {
         tr += `
@@ -102,35 +106,8 @@ $("#itemTbl").on("click", ".item_delete", (e) => {
     deleteCustomer(itemCode);
 });
 function deleteCustomer(customerId) {
-    items = items.filter((item) => item.code !== customerId);
+    setItems(items.filter((item) => item.code !== customerId));
     localStorage.setItem("items", JSON.stringify(items));
     loadItemsTbl();
 }
 //Items page end--------------------------------------------------------------------------------
-/*
-
-//Place Order page Start------------------------------------------------------------------------
-$('select#customerIds').change(function () {
-    const customerId = $(this).children("option:selected").val();
-    for (const customer of customers) {
-        if (customerId === customer.customerId) {
-            $('#customer_id_p').val(customer.customerId);
-            $('#customer_name_p').val(customer.name);
-            $('#customer_address_p').val(customer.address);
-            return;
-        }
-    }
-});
-$('select#itemCodes').change(function () {
-    const itemCode = $(this).children("option:selected").val();
-    for (const item of items) {
-        if (itemCode === item.code) {
-            $('#item_code_p').val(item.code);
-            $('#item_description_p').val(item.des);
-            $('#item_price_p').val(item.price);
-            $('#item_qty_p').val(item.qty);
-            return;
-        }
-    }
-});
-//Place Order page End------------------------------------------------------------------------*/
