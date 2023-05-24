@@ -231,12 +231,16 @@
                     <input id="item_price_p" type="text" class="form-control" readonly>
                 </div>
                 <div class="col-lg-3 col-12 col-md-6 col-sm-12">
+                    <label for="item_price_p" class="form-label">Qty need</label>
+                    <input id="item_qty_need_p" type="number" class="form-control">
+                </div>
+                <div class="col-lg-3 col-12 col-md-6 col-sm-12">
                     <label for="item_qty_p" class="form-label">Quantity</label>
                     <input id="item_qty_p" type="text" class="form-control" readonly>
                 </div>
             </form>
         </form>
-        <button class="btn btn-success add-to-order">Add this item</button>
+        <button id="add-item-to-cart" class="btn btn-success add-to-order">Add this item</button>
         <div class="row  g-3">
 
             <table class="table table-hover">
@@ -249,34 +253,8 @@
                     <th scope="col">Option</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">P001</th>
-                    <td>White rice</td>
-                    <td>200.00</td>
-                    <td>10</td>
-                    <td>
-                        <button class="btn btn-danger">-</button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">P002</th>
-                    <td>White rice</td>
-                    <td>200.00</td>
-                    <td>10</td>
-                    <td>
-                        <button class="btn btn-danger">-</button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">P003</th>
-                    <td>White rice</td>
-                    <td>200.00</td>
-                    <td>10</td>
-                    <td>
-                        <button class="btn btn-danger">-</button>
-                    </td>
-                </tr>
+                <tbody id="place-order-tbl">
+
                 </tbody>
             </table>
             <div class="billing col-lg-3 col-12 col-md-6 col-sm-12 ">
