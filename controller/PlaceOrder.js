@@ -1,6 +1,8 @@
-import {items, setItems} from "../db/DB.js";
-import {customers, setCustomers} from "../db/DB.js";
+import {items, setOrderDetails, setOrders} from "../db/DB.js";
+import {customers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
+import {OrderDetail} from "../model/OrderDetail.js";
+import {Order} from "../model/Order.js";
 
 let orderItems = [];
 //Place Order page Start------------------------------------------------------------------------
@@ -33,19 +35,16 @@ $('#place-order-tbl').on('click', 'button', (e) => {
     const itemCode = $(e.target).closest('tr').find('td').eq(0).text();
     orderItems.forEach(ot => {
         if (ot.code === itemCode) {
-            if(buttonId === 'reduceQty'){
-                if(ot.qty_need !==0){
+            if (buttonId === 'reduceQty') {
+                if (ot.qty_need !== 0) {
                     ot.qty_need -= 1;
                 }
-            }else {
-              ot.qty_need = parseInt(ot.qty_need) + 1;
+            } else {
+                ot.qty_need = parseInt(ot.qty_need) + 1;
             }
         }
     });
     loadOrderTbl();
-
-    console.log(buttonId);
-    console.log(qtyNeeded);
 });
 
 $('#add-item-to-cart').click(() => {
@@ -85,6 +84,21 @@ function loadOrderTbl() {
         `
     });
     $('#place-order-tbl').html(tr);
+}
+
+$('#place-orderbtn').click(() => {
+    const total = $('.total').text();
+    const orderId = $('.order-id').text();
+    const cash = $('#cash').val();
+    placeOrder(total, orderId, cash);
+});
+
+function placeOrder(total, orderId, cash) {
+    setOrderDetails(orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need)));
+    const customerId = $('#customer_id_p').val();
+    const customer = customers.find(cust => cust.customerId === customerId);
+    setOrders(new Order(orderId, new Date(), customer));
+    alert('Order Placed Successfully');
 }
 
 //Place Order page End------------------------------------------------------------------------
