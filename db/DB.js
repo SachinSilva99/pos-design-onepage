@@ -21,7 +21,6 @@ $(document).ready(function () {
 
     //getting order details
     let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
-    console.log(tempOrderDetails);
     if (tempOrderDetails !== null) {
         orderDetails = tempOrderDetails.map(od => {
             new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty);

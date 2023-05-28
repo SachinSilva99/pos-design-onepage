@@ -31,16 +31,20 @@ $('select#itemCodes').change(function () {
 });
 $('#place-order-tbl').on('click', 'button', (e) => {
     const buttonId = e.target.id;
-    const qtyNeeded = $(e.target).closest('tr').find('td').eq(3).text();
     const itemCode = $(e.target).closest('tr').find('td').eq(0).text();
     orderItems.forEach(ot => {
         if (ot.code === itemCode) {
+            let total = parseFloat($('.total').text());
             if (buttonId === 'reduceQty') {
                 if (ot.qty_need !== 0) {
                     ot.qty_need -= 1;
+                    total -=  parseFloat(ot.price);
+                    $('.total').text(total);
                 }
             } else {
                 ot.qty_need = parseInt(ot.qty_need) + 1;
+                total +=  parseFloat(ot.price);
+                $('.total').text(total);
             }
         }
     });
@@ -52,6 +56,9 @@ $('#add-item-to-cart').click(() => {
     const item_des = $('#item_description_p').val();
     const itemPrice = $('#item_price_p').val();
     const itemQtyNeeded = $('#item_qty_need_p').val();
+    let total = parseFloat($('.total').text());
+    total += parseInt(itemPrice) * parseInt(itemQtyNeeded);
+    $('.total').text(total);
     const itemInTable = orderItems.some(ot => ot.code === itemCode);
     if (itemInTable) {
         orderItems.forEach(ot => {
@@ -98,7 +105,25 @@ function placeOrder(total, orderId, cash) {
     const customerId = $('#customer_id_p').val();
     const customer = customers.find(cust => cust.customerId === customerId);
     setOrders(new Order(orderId, new Date(), customer));
+    orderItems = [];
+    loadOrderTbl();
     alert('Order Placed Successfully');
+    clearFields();
+}
+
+function clearFields() {
+    $('#item_code_p').val('');
+    $('#item_description_p').val('');
+    $('#item_price_p').val('');
+    $('#item_qty_need_p').val('');
+    $('#customer_id_p').val('');
+    $('#customer_name_p').val('');
+    $('#customer_address_p').val('');
+    $('#itemCodes').val('');
+    $('#customerIds').val('');
+    $('.total').text('0');
+    $('.order-id').text('D001');
+    $('#cash').val('');
 }
 
 //Place Order page End------------------------------------------------------------------------
