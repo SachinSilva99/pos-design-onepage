@@ -59,7 +59,7 @@ function setOrderDetails(newOrderDetails) {
 
 function setOrders(newOrder) {
     orders.push(newOrder);
-    localStorage.setItem("order", JSON.stringify(orders));
+    localStorage.setItem("orders", JSON.stringify(orders));
 }
 
 export {orders, orderDetails, items, customers, setItems, setCustomers, setOrderDetails, setOrders};

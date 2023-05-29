@@ -9,10 +9,15 @@ export class CustomerController {
         $('#delete').click(this.updateCustomer.bind(this));
         $(document).ready(this.loadCustomersIfAvailable.bind(this));
         $('#customerTbl').on('click', 'tr', this.clickTableLoadFields.bind(this));
-        $("#customerTbl").on("click", ".customer_delete",this.deleteCustomer.bind(this));
+        $("#customerTbl").on("click", ".customer_delete", this.deleteCustomer.bind(this));
+        $('.fields').on('keyup', this.validateCustomerDetails.bind(this));
+        this.allFiledsValidated = false;
+        this.customerIdElement = $('#customer_id');
+        this.customerNameElement = $('#customer_name');
+        this.customerAddressElement = $('#customer_address');
     }
 
-    loadCustomersTbl(){
+    loadCustomersTbl() {
 
         let tempCustomers = JSON.parse(localStorage.getItem('customers'));
         if (tempCustomers !== null) {
@@ -22,41 +27,53 @@ export class CustomerController {
         customers.map(customer => {
             tr += `
             <tr>
-              <th scope="row">${customer.customerId}</th>
-            <td>${customer.name}</td>
-            <td>${customer.address}</td>
-            <td>
-                <button class="customer_delete btn btn-danger">Delete</button>
-            </td>
+                <th scope="row">${customer.customerId}</th>
+                <td>${customer.name}</td>
+                <td>${customer.address}</td>
+                <td>
+                    <button class="customer_delete btn btn-danger">Delete</button>
+                </td>
             </tr>
         `;
         });
         $('#customerTbl').html(tr);
     }
-    addCustomer(e){
+
+    addCustomer(e) {
         e.preventDefault();
-        const customerId = $('#customer_id').val();
-        const customerName = $('#customer_name').val();
-        const customerAddress = $('#customer_address').val();
-        const customer = new Customer(customerId, customerName, customerAddress);
-        const customerExists = customers.some((c) => c.customerId === customerId);
+
+        if (!this.allFiledsValidated) {
+            $('#msg').text('Check the invalid fields!!!');
+            $('#alertInfo').text('Warning');
+            $('#alertModal').modal('show');
+            return;
+        }
+        const customer = new Customer(
+            this.customerIdElement.val(),
+            this.customerNameElement.val(),
+            this.customerAddressElement.val()
+        );
+        const customerExists = customers.some((c) => c.customerId === this.customerIdElement.val());
         if (customerExists) {
             alert("Customer Already exists");
             return;
         }
         customers.push(customer);
-        $('#customer_id').val("");
-        $('#customer_name').val("");
-        $('#customer_address').val("");
+        this.customerIdElement.val('');
+        this.customerNameElement.val('');
+        this.customerAddressElement.val('');
         localStorage.setItem("customers", JSON.stringify(customers));
-        alert(customer.customerId + " Added Successfully");
+        $('#msg').text('Customer Added Successfully');
+        $('#alertInfo').text('Success');
+        $('#alertModal').modal('show');
         this.loadCustomersTbl();
     }
-    updateCustomer(e){
+
+    updateCustomer(e) {
         e.preventDefault();
-        const customerId = $('#customer_id').val();
-        const customerName = $('#customer_name').val();
-        const customerAddress = $('#customer_address').val();
+        const customerId = this.customerIdElement.val();
+        const customerName = this.customerNameElement.val();
+        const customerAddress = this.customerAddressElement.val();
         customers.forEach((customer) => {
             if (customerId === customer.customerId) {
                 customer.name = customerName;
@@ -67,6 +84,7 @@ export class CustomerController {
         localStorage.setItem("customers", JSON.stringify(customers));
         this.loadCustomersTbl();
     }
+
     loadCustomersIfAvailable() {
 
         //loading customers if available
@@ -83,24 +101,52 @@ export class CustomerController {
             $('#customerIds').append(`<option value=${c.customerId}>${c.customerId}</option>`);
         });
     }
-    clickTableLoadFields(e){
+
+    clickTableLoadFields(e) {
         const customerId = $(e.target).closest('tr').find('th').eq(0).text();
 
         for (const customer of customers) {
             if (customerId === customer.customerId) {
-                $('#customer_id').val(customer.customerId);
-                $('#customer_name').val(customer.name);
-                $('#customer_address').val(customer.address);
+                this.customerIdElement.val(customer.customerId);
+                this.customerNameElement.val(customer.name);
+                this.customerAddressElement.val(customer.address);
                 return;
             }
         }
     }
-    deleteCustomer(e){
+
+    deleteCustomer(e) {
         const customerId = $(e.target).closest("tr").find("th").eq(0).text();
         console.log(customerId);
         setCustomers(customers.filter((customer) => customer.customerId !== customerId));
         localStorage.setItem("customers", JSON.stringify(customers));
+        $('#msg').text('Customer Deleted Successfully');
+        $('#alertInfo').text('Success');
+        $('#alertModal').modal('show');
         this.loadCustomersTbl();
     }
+
+    validateCustomerDetails() {
+        const customerId = this.customerIdElement.val();
+        const customerName = this.customerNameElement.val();
+        const customerAddress = this.customerAddressElement.val();
+        const cIdReg = /^C\d{4}$/;
+        const cNameReg = /^[A-Za-z\s'-]+$/;
+        const cAddressReg = /^[0-9A-Za-z\s',.-]+$/;
+        $('.fields').css('border', 'none');
+        if (!cIdReg.test(customerId)) {
+            this.customerIdElement.css('border', '3px solid crimson');
+            this.allFiledsValidated = false;
+        } else if (!cNameReg.test(customerName)) {
+            this.customerNameElement.css('border', '3px solid crimson');
+            this.allFiledsValidated = false;
+        } else if (!cAddressReg.test(customerAddress)) {
+            this.customerAddressElement.css('border', '3px solid crimson');
+            this.allFiledsValidated = false;
+        } else {
+            this.allFiledsValidated = true;
+        }
+    }
 }
+
 new CustomerController();
