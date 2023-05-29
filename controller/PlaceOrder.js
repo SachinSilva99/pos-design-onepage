@@ -59,7 +59,9 @@ export class PlaceOrder {
                 }
             }
         });
+
         this.loadOrderTbl();
+
     }
 
     loadOrderTbl() {

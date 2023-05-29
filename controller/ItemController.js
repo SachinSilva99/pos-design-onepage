@@ -72,6 +72,7 @@ export class ItemController{
             }
         });
         setItems(items);
+
         this.loadItemsTbl();
     }
     //click on item table row and load to the fields----------------------------------

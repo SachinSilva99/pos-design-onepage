@@ -8,38 +8,18 @@ let customers = [];
 let orderDetails = [];
 let orders = [];
 $(document).ready(function () {
-
-    //loading customers if available
-    let tempCustomers = JSON.parse(localStorage.getItem('customers'));
-    let tempItems = JSON.parse(localStorage.getItem('items'));
-    if (tempCustomers !== null) {
-        customers = tempCustomers.map(c => new Customer(c._customerId, c._name, c._address));
-    }
-    if (tempItems !== null) {
-        items = tempItems.map(i => new Item(i._code, i._des, i._price, i._qty));
-    }
-
-    //getting order details
-    let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
-    if (tempOrderDetails !== null) {
-        orderDetails = tempOrderDetails.map(od => {
-            new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice);
-        });
-    }
-    //getting orders
-    let tempOrders = JSON.parse(localStorage.getItem('orders'));
-    if (tempOrders !== null) {
-        orders = tempOrders.map(od => {
-            new Order(od._id, od._date, od._customer);
-        });
-    }
+    getOrders();
+    getOrderDetails();
+    getCustomers();
+    getItems();
 });
 
 function setItems(newItems) {
     items = newItems;
     localStorage.setItem("items", JSON.stringify(customers));
 }
-function getItems(newItems) {
+
+function getItems() {
     let tempItems = JSON.parse(localStorage.getItem('items'));
     if (tempItems !== null) {
         items = tempItems.map(i => new Item(i._code, i._des, i._price, i._qty));
@@ -73,6 +53,13 @@ function setOrderDetails(newOrderDetails) {
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
 }
 
+function getOrderDetails() {
+    let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
+    if (tempOrderDetails !== null) {
+        orderDetails = tempOrderDetails.map(od => new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice));
+    }
+    return orderDetails;
+}
 
 function setOrders(newOrder) {
     let tempOrders = JSON.parse(localStorage.getItem('orders'));
@@ -81,7 +68,25 @@ function setOrders(newOrder) {
     }
     orders.push(newOrder);
     localStorage.setItem("orders", JSON.stringify(orders));
-
 }
 
-export {orders, orderDetails,  setItems, setCustomers, setOrderDetails, setOrders,getCustomers,getItems};
+function getOrders() {
+    let tempOrders = JSON.parse(localStorage.getItem('orders'));
+    if (tempOrders !== null) {
+        orders = tempOrders.map(o => new Order(o._id, o._date, o._customer));
+    }
+    return orders;
+}
+
+export {
+    orders,
+    orderDetails,
+    getOrders,
+    setItems,
+    setCustomers,
+    setOrderDetails,
+    getOrderDetails,
+    setOrders,
+    getCustomers,
+    getItems
+};

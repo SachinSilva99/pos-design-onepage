@@ -1,7 +1,4 @@
-import {OrderDetail} from "../model/OrderDetail.js";
-import {orderDetails, setOrderDetails, setOrders} from "../db/DB.js";
-import {orders} from "../db/DB.js";
-import {Order} from "../model/Order.js";
+import {getOrderDetails, getOrders} from "../db/DB.js";
 
 export class OrderController {
     constructor() {
@@ -9,24 +6,13 @@ export class OrderController {
     }
 
     loadOrders(e) {
-
-        //getting orders
-        let tempOrders = JSON.parse(localStorage.getItem('orders'));
-        if (tempOrders !== null) {
-            setOrders(tempOrders);
-        }
-        let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
-        if (tempOrderDetails !== null) {
-            localStorage.setItem("orderDetails", JSON.stringify(tempOrderDetails));
-        }
-
         const orderId = $(e.target).children("option:selected").val();
         console.log(orderId);
-        console.log(tempOrderDetails);
-        if(orderId){
-            const ods = tempOrderDetails.filter(o => o._orderId === orderId);
+        console.log(getOrderDetails());
+        if (orderId) {
+            const ods = getOrderDetails().filter(o => o._orderId === orderId);
             console.log(ods);
-            const order = tempOrders.find(o => o._id === orderId);
+            const order = getOrders().find(o => o._id === orderId);
 
             let tr = ``;
             ods.forEach(od => {
@@ -42,7 +28,6 @@ export class OrderController {
             });
             $('#ordersTbody').html(tr);
         }
-
     }
 }
 
