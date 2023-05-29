@@ -1,6 +1,6 @@
 //customers page start---------------------------------------------------------------
 import {Customer} from "../model/Customer.js";
-import {customers, setCustomers} from "../db/DB.js";
+import { getCustomers, setCustomers} from "../db/DB.js";
 
 export class CustomerController {
     constructor() {
@@ -42,12 +42,9 @@ export class CustomerController {
 
     loadCustomersTbl() {
 
-        let tempCustomers = JSON.parse(localStorage.getItem('customers'));
-        if (tempCustomers !== null) {
-            setCustomers(tempCustomers.map(c => new Customer(c._customerId, c._name, c._address)));
-        }
+
         let tr = ``;
-        customers.map(customer => {
+        getCustomers().map(customer => {
             tr += `
             <tr>
                 <th scope="row">${customer.customerId}</th>
@@ -76,16 +73,17 @@ export class CustomerController {
             this.customerNameElement.val(),
             this.customerAddressElement.val()
         );
-        const customerExists = customers.some((c) => c.customerId === this.customerIdElement.val());
+        const customerExists = getCustomers().some((c) => c.customerId === this.customerIdElement.val());
         if (customerExists) {
             alert("Customer Already exists");
             return;
         }
+        const customers = getCustomers();
         customers.push(customer);
         this.customerIdElement.val('');
         this.customerNameElement.val('');
         this.customerAddressElement.val('');
-        localStorage.setItem("customers", JSON.stringify(customers));
+        setCustomers(customers);
         $('#msg').text('Customer Added Successfully');
         $('#alertInfo').text('Success');
         $('#alertModal').modal('show');
@@ -97,6 +95,7 @@ export class CustomerController {
         const customerId = this.customerIdElement.val();
         const customerName = this.customerNameElement.val();
         const customerAddress = this.customerAddressElement.val();
+        const customers = getCustomers();
         customers.forEach((customer) => {
             if (customerId === customer.customerId) {
                 customer.name = customerName;
@@ -104,7 +103,7 @@ export class CustomerController {
                 alert('customer updated successfully');
             }
         });
-        localStorage.setItem("customers", JSON.stringify(customers));
+        setCustomers(customers);
         this.loadCustomersTbl();
     }
 
@@ -118,7 +117,7 @@ export class CustomerController {
         }
 
         //load customer ids in place order options
-        customers.map(c => {
+        getCustomers().map(c => {
             $('#customerIds').append(`<option value=${c.customerId}>${c.customerId}</option>`);
         });
     }
@@ -126,7 +125,7 @@ export class CustomerController {
     clickTableLoadFields(e) {
         const customerId = $(e.target).closest('tr').find('th').eq(0).text();
 
-        for (const customer of customers) {
+        for (const customer of getCustomers()) {
             if (customerId === customer.customerId) {
                 this.customerIdElement.val(customer.customerId);
                 this.customerNameElement.val(customer.name);
@@ -138,8 +137,7 @@ export class CustomerController {
 
     deleteCustomer(e) {
         const customerId = $(e.target).closest("tr").find("th").eq(0).text();
-        setCustomers(customers.filter((customer) => customer.customerId !== customerId));
-        localStorage.setItem("customers", JSON.stringify(customers));
+        setCustomers(getCustomers().filter((customer) => customer.customerId !== customerId));
         $('#msg').text('Customer Deleted Successfully');
         $('#alertInfo').text('Success');
         $('#alertModal').modal('show');

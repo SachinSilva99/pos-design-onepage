@@ -1,5 +1,5 @@
 import {items, setOrderDetails, setOrders} from "../db/DB.js";
-import {customers} from "../db/DB.js";
+import {getCustomers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
 import {OrderDetail} from "../model/OrderDetail.js";
 import {Order} from "../model/Order.js";
@@ -17,7 +17,7 @@ export class PlaceOrder {
     customerSelectOnChange(e) {
         const customerId = $(e.target).children("option:selected").val();
         console.log('customer id', customerId);
-        for (const customer of customers) {
+        for (const customer of getCustomers()) {
             if (customerId === customer.customerId) {
                 $('#customer_id_p').val(customer.customerId);
                 $('#customer_name_p').val(customer.name);
@@ -110,7 +110,7 @@ export class PlaceOrder {
         const cash = $('#cash').val();
         setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need,ot.price)));
         const customerId = $('#customer_id_p').val();
-        const customer = customers.find(cust => cust.customerId === customerId);
+        const customer = getCustomers().find(cust => cust.customerId === customerId);
         setOrders(new Order(orderId, new Date(), customer));
         this.orderItems = [];
         this.loadOrderTbl();

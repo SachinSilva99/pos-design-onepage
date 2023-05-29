@@ -46,6 +46,15 @@ function setItems(newItems) {
 
 function setCustomers(newCustomers) {
     customers = newCustomers;
+    localStorage.setItem("customers", JSON.stringify(customers));
+}
+
+function getCustomers() {
+    let tempCustomers = JSON.parse(localStorage.getItem('customers'));
+    if (tempCustomers !== null) {
+        customers = tempCustomers.map(c => new Customer(c._customerId, c._name, c._address));
+    }
+    return customers;
 }
 
 function setOrderDetails(newOrderDetails) {
@@ -71,4 +80,4 @@ function setOrders(newOrder) {
 
 }
 
-export {orders, orderDetails, items, customers, setItems, setCustomers, setOrderDetails, setOrders};
+export {orders, orderDetails, items,  setItems, setCustomers, setOrderDetails, setOrders,getCustomers};
