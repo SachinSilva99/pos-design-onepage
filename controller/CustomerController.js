@@ -15,6 +15,28 @@ export class CustomerController {
         this.customerIdElement = $('#customer_id');
         this.customerNameElement = $('#customer_name');
         this.customerAddressElement = $('#customer_address');
+        $('#customerSearchField').on('keyup', this.searchCustomers.bind(this));
+    }
+
+    searchCustomers() {
+        const searchField = $('#customerSearchField').val();
+        const matchedCustomers = customers.filter(
+            c => c.customerId.includes(searchField) || c.name.includes(searchField)
+        );
+        let tr = ``;
+        matchedCustomers.map(customer => {
+            tr += `
+            <tr>
+                <th scope="row">${customer.customerId}</th>
+                <td>${customer.name}</td>
+                <td>${customer.address}</td>
+                <td>
+                    <button class="customer_delete btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        `;
+        });
+        $('#customerTbl').html(tr);
     }
 
     loadCustomersTbl() {
