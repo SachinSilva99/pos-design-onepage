@@ -1,4 +1,4 @@
-import {items, setOrderDetails, setOrders} from "../db/DB.js";
+import {getItems, setOrderDetails, setOrders} from "../db/DB.js";
 import {getCustomers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
 import {OrderDetail} from "../model/OrderDetail.js";
@@ -29,7 +29,7 @@ export class PlaceOrder {
 
     itemSelectOnChange(e) {
         const itemCode = $(e.target).children("option:selected").val();
-        for (const item of items) {
+        for (const item of getItems()) {
             if (itemCode === item.code) {
                 $('#item_code_p').val(item.code);
                 $('#item_description_p').val(item.des);
@@ -66,17 +66,16 @@ export class PlaceOrder {
         let tr = ``;
         this.orderItems.map(ot => {
             tr += `
-        <tr>
-        <td>${ot.code}</td>
-        <td>${ot.des}</td>
-        <td>${ot.price}</td>
-        <td>${ot.qty_need}</td>
-        <td>
-            <button id="reduceQty" class="btn btn-danger">-</button>
-            <button id="increseQty" class="btn btn-success">+</button>
-        </td>
-        </tr>
-        `
+            <tr>
+                <td>${ot.code}</td>
+                <td>${ot.des}</td>
+                <td>${ot.price}</td>
+                <td>${ot.qty_need}</td>
+                <td>
+                    <button id="reduceQty" class="btn btn-danger">-</button>
+                    <button id="increseQty" class="btn btn-success">+</button>
+                </td>
+            </tr>`;
         });
         $('#place-order-tbl').html(tr);
     }
@@ -108,7 +107,7 @@ export class PlaceOrder {
         const total = $('.total').text();
         const orderId = $('.order-id').text();
         const cash = $('#cash').val();
-        setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need,ot.price)));
+        setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price)));
         const customerId = $('#customer_id_p').val();
         const customer = getCustomers().find(cust => cust.customerId === customerId);
         setOrders(new Order(orderId, new Date(), customer));

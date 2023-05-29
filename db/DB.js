@@ -36,11 +36,15 @@ $(document).ready(function () {
 });
 
 function setItems(newItems) {
+    items = newItems;
+    localStorage.setItem("items", JSON.stringify(customers));
+}
+function getItems(newItems) {
     let tempItems = JSON.parse(localStorage.getItem('items'));
     if (tempItems !== null) {
         items = tempItems.map(i => new Item(i._code, i._des, i._price, i._qty));
     }
-    items.push(newItems);
+    return items;
 }
 
 
@@ -80,4 +84,4 @@ function setOrders(newOrder) {
 
 }
 
-export {orders, orderDetails, items,  setItems, setCustomers, setOrderDetails, setOrders,getCustomers};
+export {orders, orderDetails,  setItems, setCustomers, setOrderDetails, setOrders,getCustomers,getItems};

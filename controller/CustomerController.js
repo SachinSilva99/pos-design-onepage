@@ -21,7 +21,7 @@ export class CustomerController {
 
     searchCustomers() {
         const searchField = $('#customerSearchField').val();
-        const matchedCustomers = customers.filter(
+        const matchedCustomers = getCustomers().filter(
             c => c.customerId.includes(searchField) || c.name.includes(searchField)
         );
         let tr = ``;
@@ -41,8 +41,6 @@ export class CustomerController {
     }
 
     loadCustomersTbl() {
-
-
         let tr = ``;
         getCustomers().map(customer => {
             tr += `
