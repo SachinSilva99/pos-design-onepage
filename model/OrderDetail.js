@@ -1,9 +1,18 @@
 export class OrderDetail{
-    constructor(orderId, itemCode, itemDes, qty) {
+    constructor(orderId, itemCode, itemDes, qty, itemPrice) {
         this._orderId = orderId;
         this._itemCode = itemCode;
         this._itemDes = itemDes;
         this._qty = qty;
+        this._itemPrice = itemPrice;
+    }
+
+    get itemPrice() {
+        return this._itemPrice;
+    }
+
+    set itemPrice(value) {
+        this._itemPrice = value;
     }
 
     get orderId() {

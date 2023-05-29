@@ -4,6 +4,7 @@ import {customers, setCustomers} from "../db/DB.js";
 
 export class CustomerController {
     constructor() {
+
         $('#add_customer').click(this.addCustomer.bind(this));
         $('#update_customer').click(this.updateCustomer.bind(this));
         $('#delete').click(this.updateCustomer.bind(this));
@@ -111,9 +112,7 @@ export class CustomerController {
 
         //loading customers if available
         let tempCustomers = JSON.parse(localStorage.getItem('customers'));
-        console.log(tempCustomers);
         if (tempCustomers !== null) {
-            console.log(tempCustomers);
             setCustomers(tempCustomers.map(c => new Customer(c._customerId, c._name, c._address)));
             this.loadCustomersTbl();
         }
@@ -139,7 +138,6 @@ export class CustomerController {
 
     deleteCustomer(e) {
         const customerId = $(e.target).closest("tr").find("th").eq(0).text();
-        console.log(customerId);
         setCustomers(customers.filter((customer) => customer.customerId !== customerId));
         localStorage.setItem("customers", JSON.stringify(customers));
         $('#msg').text('Customer Deleted Successfully');

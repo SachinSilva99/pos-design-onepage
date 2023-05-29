@@ -7,7 +7,6 @@ import {Order} from "../model/Order.js";
 export class PlaceOrder {
     constructor() {
         this.orderItems = [];
-//Place Order page Start------------------------------------------------------------------------
         $('select#customerIds').change(this.customerSelectOnChange.bind(this));
         $('select#itemCodes').change(this.itemSelectOnChange.bind(this));
         $('#place-order-tbl').on('click', 'button', this.optionButtonClick.bind(this));
@@ -106,19 +105,18 @@ export class PlaceOrder {
     }
 
     placeOrderBtnOnClick() {
-        $('#place-orderbtn').click(() => {
-            const total = $('.total').text();
-            const orderId = $('.order-id').text();
-            const cash = $('#cash').val();
-            setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need)));
-            const customerId = $('#customer_id_p').val();
-            const customer = customers.find(cust => cust.customerId === customerId);
-            setOrders(new Order(orderId, new Date(), customer));
-            this.orderItems = [];
-            this.loadOrderTbl();
-            alert('Order Placed Successfully');
-            this.clearFields();
-        });
+        const total = $('.total').text();
+        const orderId = $('.order-id').text();
+        const cash = $('#cash').val();
+        setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need,ot.price)));
+        const customerId = $('#customer_id_p').val();
+        const customer = customers.find(cust => cust.customerId === customerId);
+        setOrders(new Order(orderId, new Date(), customer));
+        this.orderItems = [];
+        this.loadOrderTbl();
+        alert('Order Placed Successfully');
+        this.clearFields();
+
     }
 
     clearFields() {
@@ -136,6 +134,7 @@ export class PlaceOrder {
         $('#cash').val('');
     }
 }
+
 new PlaceOrder();
 
 

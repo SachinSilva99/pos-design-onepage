@@ -23,7 +23,7 @@ $(document).ready(function () {
     let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
     if (tempOrderDetails !== null) {
         orderDetails = tempOrderDetails.map(od => {
-            new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty);
+            new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice);
         });
     }
     //getting orders
@@ -36,8 +36,13 @@ $(document).ready(function () {
 });
 
 function setItems(newItems) {
-    items = newItems;
+    let tempItems = JSON.parse(localStorage.getItem('items'));
+    if (tempItems !== null) {
+        items = tempItems.map(i => new Item(i._code, i._des, i._price, i._qty));
+    }
+    items.push(newItems);
 }
+
 
 function setCustomers(newCustomers) {
     customers = newCustomers;
@@ -45,21 +50,25 @@ function setCustomers(newCustomers) {
 
 function setOrderDetails(newOrderDetails) {
     let tempOrderDetails = JSON.parse(localStorage.getItem('orderDetails'));
-    console.log(tempOrderDetails);
     if (tempOrderDetails !== null) {
-        orderDetails = tempOrderDetails.map(od => new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty));
+        orderDetails = tempOrderDetails.map(od => new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice));
     }
     newOrderDetails.forEach(od => orderDetails.push(
-        new OrderDetail(od.orderId, od.itemCode, od.itemDes, od.qty)
-    ));
+        new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice))
+    );
     console.log(orderDetails);
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
 }
 
 
 function setOrders(newOrder) {
+    let tempOrders = JSON.parse(localStorage.getItem('orders'));
+    if (tempOrders !== null) {
+        orders = tempOrders.map(o => new Order(o._id, o._date, o._customer));
+    }
     orders.push(newOrder);
     localStorage.setItem("orders", JSON.stringify(orders));
+
 }
 
 export {orders, orderDetails, items, customers, setItems, setCustomers, setOrderDetails, setOrders};
