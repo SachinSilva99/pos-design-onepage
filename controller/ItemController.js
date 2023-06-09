@@ -9,6 +9,7 @@ export class ItemController{
         $("#itemTbl").on("click", ".item_delete",this.deleteItem.bind(this));
     }
     loadingItemsIfAvailable(){
+        this.loadItemsTbl()
         //load item codes in place order options
         getItems().map(i => {
             $('#itemCodes').append(`<option value=${i.code}>${i.code}</option>`);

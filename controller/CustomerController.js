@@ -108,11 +108,8 @@ export class CustomerController {
     loadCustomersIfAvailable() {
 
         //loading customers if available
-        let tempCustomers = JSON.parse(localStorage.getItem('customers'));
-        if (tempCustomers !== null) {
-            setCustomers(tempCustomers.map(c => new Customer(c._customerId, c._name, c._address)));
-            this.loadCustomersTbl();
-        }
+        getCustomers();
+        this.loadCustomersTbl();
 
         //load customer ids in place order options
         getCustomers().map(c => {

@@ -1,8 +1,9 @@
-import {getItems, setOrderDetails, setOrders} from "../db/DB.js";
+import {getItems, setCustomers, setOrderDetails, setOrders} from "../db/DB.js";
 import {getCustomers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
 import {OrderDetail} from "../model/OrderDetail.js";
 import {Order} from "../model/Order.js";
+import {Customer} from "../model/Customer.js";
 
 export class PlaceOrder {
     constructor() {
@@ -111,7 +112,14 @@ export class PlaceOrder {
         const cash = $('#cash').val();
         setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price)));
         const customerId = $('#customer_id_p').val();
-        const customer = getCustomers().find(cust => cust.customerId === customerId);
+        let customer = getCustomers().find(cust => cust.customerId === customerId);
+        if(customer === undefined){
+            console.log('here');
+            const customers = getCustomers();
+            customer = new Customer($('#customer_id_p').val(),$('#customer_name_p').val(),$('#customer_address_p').val());
+            customers.push(customer);
+            setCustomers(customers);
+        }
         setOrders(new Order(orderId, new Date(), customer));
         this.orderItems = [];
         this.loadOrderTbl();
