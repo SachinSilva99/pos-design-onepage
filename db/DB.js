@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 function setItems(newItems) {
     items = newItems;
-    localStorage.setItem("items", JSON.stringify(customers));
+    localStorage.setItem("items", JSON.stringify(items));
 }
 
 function getItems() {

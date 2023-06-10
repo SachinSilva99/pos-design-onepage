@@ -57,6 +57,7 @@ export class ItemController {
             return;
         }
         const items = getItems();
+        console.log(items);
         items.push(item);
         $('#item_code').val('');
         $('#item_description').val('');
