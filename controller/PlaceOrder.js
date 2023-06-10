@@ -60,9 +60,7 @@ export class PlaceOrder {
                 }
             }
         });
-
         this.loadOrderTbl();
-
     }
 
     loadOrderTbl() {
@@ -113,10 +111,13 @@ export class PlaceOrder {
         setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price)));
         const customerId = $('#customer_id_p').val();
         let customer = getCustomers().find(cust => cust.customerId === customerId);
-        if(customer === undefined){
+        if (customer === undefined) {
             console.log('here');
             const customers = getCustomers();
-            customer = new Customer($('#customer_id_p').val(),$('#customer_name_p').val(),$('#customer_address_p').val());
+            customer = new Customer(
+                $('#customer_id_p').val(),
+                $('#customer_name_p').val(),
+                $('#customer_address_p').val());
             customers.push(customer);
             setCustomers(customers);
         }

@@ -1,6 +1,6 @@
 //customers page start---------------------------------------------------------------
 import {Customer} from "../model/Customer.js";
-import { getCustomers, setCustomers} from "../db/DB.js";
+import {getCustomers, setCustomers} from "../db/DB.js";
 
 export class CustomerController {
     constructor() {
@@ -59,7 +59,6 @@ export class CustomerController {
 
     addCustomer(e) {
         e.preventDefault();
-
         if (!this.allFiledsValidated) {
             $('#msg').text('Check the invalid fields!!!');
             $('#alertInfo').text('Warning');
@@ -71,7 +70,7 @@ export class CustomerController {
             this.customerNameElement.val(),
             this.customerAddressElement.val()
         );
-        const customerExists = getCustomers().some((c) => c.customerId === this.customerIdElement.val());
+        const customerExists = getCustomers().some((c)=> c.customerId === this.customerIdElement.val());
         if (customerExists) {
             alert("Customer Already exists");
             return;
@@ -143,7 +142,7 @@ export class CustomerController {
         const customerId = this.customerIdElement.val();
         const customerName = this.customerNameElement.val();
         const customerAddress = this.customerAddressElement.val();
-        const cIdReg = /^C\d{4}$/;
+        const cIdReg = /^C00\d+$/;
         const cNameReg = /^[A-Za-z\s'-]+$/;
         const cAddressReg = /^[0-9A-Za-z\s',.-]+$/;
         $('.fields').css('border', 'none');
