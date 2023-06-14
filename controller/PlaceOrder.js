@@ -1,4 +1,4 @@
-import {getItems, getOrders, setCustomers, setOrderDetails, setOrders} from "../db/DB.js";
+import {getItems, getOrders, setCustomers, setItems, setOrderDetails, setOrders} from "../db/DB.js";
 import {getCustomers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
 import {OrderDetail} from "../model/OrderDetail.js";
@@ -152,6 +152,16 @@ export class PlaceOrder {
             return;
         }
         setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price)));
+        const items = getItems();
+        console.log(this.orderItems);
+
+        this.orderItems.map(od => {
+            const item = items.find(item => item.code === od.code);
+            if (item) {
+                item.qty -= od._qty_need;
+            }
+        });
+        setItems(items);
         const customerId = $('#customer_id_p').val();
         let customer = getCustomers().find(cust => cust.customerId === customerId);
         if (customer === undefined) {
@@ -164,6 +174,7 @@ export class PlaceOrder {
             setCustomers(customers);
         }
         setOrders(new Order(orderId, new Date(), customer));
+
         this.orderItems = [];
         this.loadOrderTbl();
         const balance = cash - total;
@@ -172,6 +183,7 @@ export class PlaceOrder {
         $('#alertModal').modal('show');
         const currentOrderId = $('#orderIdLabel').text();
         let nextOrderId = this.generateOrderId(currentOrderId);
+        console.log('nexorderID :',nextOrderId)
         $('#orderIdLabel').text(nextOrderId);
         this.clearFields();
 
