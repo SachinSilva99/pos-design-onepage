@@ -49,7 +49,6 @@ function setOrderDetails(newOrderDetails) {
     newOrderDetails.forEach(od => orderDetails.push(
         new OrderDetail(od._orderId, od._itemCode, od._itemDes, od._qty, od._itemPrice))
     );
-    console.log(orderDetails);
     localStorage.setItem("orderDetails", JSON.stringify(orderDetails));
 }
 

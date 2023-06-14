@@ -1,4 +1,4 @@
-import {getItems, setCustomers, setOrderDetails, setOrders} from "../db/DB.js";
+import {getItems, getOrders, setCustomers, setOrderDetails, setOrders} from "../db/DB.js";
 import {getCustomers} from "../db/DB.js";
 import {OrderItemTm} from "../model/tm/OrderItemTm.js";
 import {OrderDetail} from "../model/OrderDetail.js";
@@ -8,6 +8,8 @@ import {Customer} from "../model/Customer.js";
 export class PlaceOrder {
     constructor() {
         this.orderItems = [];
+        //$('.nav-link').click(this.loadCustomerItems.bind(this));
+        $('#orderIdLabel').text(this.getLastOrderId.bind(this));
         $('select#customerIds').change(this.customerSelectOnChange.bind(this));
         $('select#itemCodes').change(this.itemSelectOnChange.bind(this));
         $('#place-order-tbl').on('click', 'button', this.optionButtonClick.bind(this));
@@ -86,6 +88,7 @@ export class PlaceOrder {
         const item_des = $('#item_description_p').val();
         const itemPrice = $('#item_price_p').val();
         const itemQtyNeeded = $('#item_qty_need_p').val();
+        const qty = $('#item_qty_p').val();
         let total = parseFloat($('.total').text());
         total += parseInt(itemPrice) * parseInt(itemQtyNeeded);
         $('.total').text(total);
@@ -93,8 +96,16 @@ export class PlaceOrder {
         if (itemInTable) {
             this.orderItems.forEach(ot => {
                 if (ot.code === itemCode) {
-                    ot.qty_need = parseInt(ot.qty_need) + parseInt(itemQtyNeeded);
-                    this.loadOrderTbl();
+                    console.log(ot.qty_need + itemQtyNeeded);
+                    if (ot.qty_need <= itemQtyNeeded || qty < (parseInt(ot.qty_need) + parseInt(itemQtyNeeded))) {
+                        $('#msg').text("QTY need cannot exceed qty");
+                        $('#alertInfo').text('Error : ');
+                        $('#alertModal').modal('show');
+                        return;
+                    } else {
+                        ot.qty_need = parseInt(ot.qty_need) + parseInt(itemQtyNeeded);
+                        this.loadOrderTbl();
+                    }
                 }
             });
             return;
@@ -107,12 +118,43 @@ export class PlaceOrder {
     placeOrderBtnOnClick() {
         const total = $('.total').text();
         const orderId = $('.order-id').text();
-        const cash = $('#cash').val();
+        if ($('#cash').val() === '') {
+            $('#msg').text("Cash cannot be empty");
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
+        const cash = parseFloat($('#cash').val());
+        if ($('#customer_id_p').val().length === 0 ||
+            $('#customer_name_p').val().length === 0 ||
+            $('#customer_address_p').val().length === 0) {
+            $('#msg').text("Customer cannot be empty");
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
+        if (this.orderItems.length === 0) {
+            $('#msg').text("Please add some items");
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
+        if (cash.length === 0) {
+            $('#msg').text('Please input the cash amount');
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
+        if (cash < total) {
+            $('#msg').text("Cash isn't enough");
+            $('#alertInfo').text('Success');
+            $('#alertModal').modal('show');
+            return;
+        }
         setOrderDetails(this.orderItems.map(ot => new OrderDetail(orderId, ot.code, ot.des, ot.qty_need, ot.price)));
         const customerId = $('#customer_id_p').val();
         let customer = getCustomers().find(cust => cust.customerId === customerId);
         if (customer === undefined) {
-            console.log('here');
             const customers = getCustomers();
             customer = new Customer(
                 $('#customer_id_p').val(),
@@ -124,7 +166,13 @@ export class PlaceOrder {
         setOrders(new Order(orderId, new Date(), customer));
         this.orderItems = [];
         this.loadOrderTbl();
-        alert('Order Placed Successfully');
+        const balance = cash - total;
+        $('#msg').text(`Order Placed Successfully Customer Balance is  ${balance}`);
+        $('#alertInfo').text('Success');
+        $('#alertModal').modal('show');
+        const currentOrderId = $('#orderIdLabel').text();
+        let nextOrderId = this.generateOrderId(currentOrderId);
+        $('#orderIdLabel').text(nextOrderId);
         this.clearFields();
 
     }
@@ -142,6 +190,19 @@ export class PlaceOrder {
         $('.total').text('0');
         $('.order-id').text('D001');
         $('#cash').val('');
+    }
+
+    generateOrderId(currentOrderId) {
+        const currentNumber = parseInt(currentOrderId.slice(1));
+        const nextNumber = currentNumber + 1;
+        return `D${nextNumber.toString().padStart(4, '0')}`;
+    }
+
+    getLastOrderId() {
+        if (getOrders().length === 0) return 'D001';
+        let orderId = getOrders().slice(-1)[0].id;
+        return this.generateOrderId(orderId);
+
     }
 }
 
