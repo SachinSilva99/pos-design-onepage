@@ -202,6 +202,7 @@ export class PlaceOrder {
         $('.total').text('0');
         $('.order-id').text('D001');
         $('#cash').val('');
+        $('#item_qty_p').val('');
     }
 
     generateOrderId(currentOrderId) {
@@ -214,7 +215,6 @@ export class PlaceOrder {
         if (getOrders().length === 0) return 'D001';
         let orderId = getOrders().slice(-1)[0].id;
         return this.generateOrderId(orderId);
-
     }
 }
 
